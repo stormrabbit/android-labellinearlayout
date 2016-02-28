@@ -3,14 +3,11 @@ package com.example.linearlayout;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.View.MeasureSpec;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
 
 public class Test2View extends LinearLayout {
 
@@ -21,29 +18,28 @@ public class Test2View extends LinearLayout {
 		initView();
 	}
 
-
-
 	public Test2View(Context context, AttributeSet attrs) {
-		this(context, attrs,0);
+		this(context, attrs, 0);
 	}
 
 	public Test2View(Context context) {
-		this(context, null,0);
+		this(context, null, 0);
 	}
 
 	private void initView() {
 		View.inflate(getContext(), R.layout.ll_content, this);
+
 	}
-	
+
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		// TODO Auto-generated method stub
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		  contentWidth = MeasureSpec.getSize(widthMeasureSpec);
-		  int rh = MeasureSpec.getSize(heightMeasureSpec);
+		contentWidth = MeasureSpec.getSize(widthMeasureSpec);
+		int rh = MeasureSpec.getSize(heightMeasureSpec);
 	}
-	
-	public void addLabel(String[] names) {
+
+	public void addLabel(final String[] names) {
 		ArrayList<TextView> tViews = new ArrayList<TextView>();
 		// 1 首先,测量出content的宽度
 		int margin = 15;
@@ -52,6 +48,11 @@ public class Test2View extends LinearLayout {
 				View.MeasureSpec.UNSPECIFIED);
 		int heightMeasureSpec = MeasureSpec.makeMeasureSpec(0,
 				View.MeasureSpec.UNSPECIFIED);
+
+		if (contentWidth == 0) {
+				this.measure(widthMeasureSpec, heightMeasureSpec);
+				contentWidth = getWidth();
+		}
 		// 2 创建一个横排linearlayout,宽度设置为matchparent,高度为0dp,weight1,
 		LinearLayout llLine = (LinearLayout) View.inflate(getContext(),
 				R.layout.ll_line, null);
@@ -78,6 +79,9 @@ public class Test2View extends LinearLayout {
 				// 8 用content的宽度-目前累加的宽度,得出剩余宽度
 				int leftWidth = contentWidth - lineWidth;
 				// 9 用剩余宽度除以集合的个数,获得panding值
+				if (tViews.size() == 0) {
+					System.out.println();
+				}
 				int padding = leftWidth / tViews.size();
 				// 10 从集合中拿出textview,按照padding值,marging值设置lieanrylayout
 				for (int i = 0; i < tViews.size(); i++) {
@@ -102,8 +106,8 @@ public class Test2View extends LinearLayout {
 				tViews.clear();
 				tViews.add(tView);
 				lineWidth = margin * 2 + tViewWidth;
-				llLine = (LinearLayout) View.inflate(getContext(), R.layout.ll_line,
-						null);
+				llLine = (LinearLayout) View.inflate(getContext(),
+						R.layout.ll_line, null);
 				// 13 集合数据中添加新的textview,宽度新的累加
 				// 14 继续下一轮循环
 			}
@@ -136,5 +140,10 @@ public class Test2View extends LinearLayout {
 			// 14 继续下一轮循环
 
 		}
+	
+	}
+
+	public void setWidth(int mHeaderViewHeight) {
+			this.contentWidth = mHeaderViewHeight;
 	}
 }

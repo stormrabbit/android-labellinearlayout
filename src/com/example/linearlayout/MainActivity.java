@@ -2,34 +2,36 @@ package com.example.linearlayout;
 
 import java.util.ArrayList;
 
-import android.R.integer;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.MeasureSpec;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
 	private String[] names;
 	private LinearLayout llContent;
+	private Test2View test2View;
 
+	@SuppressLint("WrongCall")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		llContent = (LinearLayout) findViewById(R.id.content);
-		Test2View test2View = (Test2View) findViewById(R.id.testView1);
+//		llContent = (LinearLayout) findViewById(R.id.content);
 		initData();
+		test2View = (Test2View) findViewById(R.id.testView1);
+		test2View.setWidth(1080);
 		test2View.addLabel(names);
-//		addNames();
 	}
 
 	public void initData() {
@@ -38,6 +40,16 @@ public class MainActivity extends Activity {
 				"林妹妹", "罗西", "张八叉", "小野驴师兄" };
 	}
 
+	@Override
+	protected void onStart() {
+		super.onStart();
+
+	}
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+	}
 	public void addNames() {
 		ArrayList<TextView> tViews = new ArrayList<TextView>();
 		// 1 首先,测量出content的宽度
